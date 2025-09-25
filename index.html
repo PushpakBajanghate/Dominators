@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Krishi Rakshak 🌱 – Easy & Smart Farming</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #1a1a1a;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .phone-container {
+            width: 375px;
+            height: 812px;
+            background: #000;
+            border-radius: 40px;
+            box-shadow: 
+                0 0 0 8px #2a2a2a,
+                0 0 0 12px #1a1a1a,
+                0 30px 60px rgba(0,0,0,0.4);
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .phone-bezel {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 44px;
+            background: #000;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .notch {
+            width: 150px;
+            height: 30px;
+            background: #000;
+            border-radius: 0 0 20px 20px;
+            position: relative;
+        }
+        
+        .home-indicator {
+            position: absolute;
+            bottom: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 134px;
+            height: 5px;
+            background: #fff;
+            border-radius: 3px;
+        }
+        
+        .status-bar {
+            position: absolute;
+            top: 44px;
+            left: 0;
+            right: 0;
+            height: 44px;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            color: white;
+            font-size: 14px;
+            font-weight: 500;
+            z-index: 999;
+        }
+        
+        .app-content {
+            position: absolute;
+            top: 88px;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: white;
+            overflow: hidden;
+        }
+        
+        .screen {
+            display: none;
+            height: 100%;
+            overflow-y: auto;
+            position: relative;
+        }
+        
+        .screen.active {
+            display: block;
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        }
+        
+        .card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            padding: 20px;
+            margin: 12px 0;
+        }
+        
+        .icon-circle {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin: 0 auto 12px;
+        }
+        
+        .bottom-nav {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-top: 1px solid #e5e7eb;
+            padding: 12px 0 20px 0;
+            display: flex;
+            justify-content: space-around;
+        }
+        
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .nav-item.active {
+            color: #10b981;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e5e7eb;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #10b981, #059669);
+            transition: width 0.5s ease;
+        }
+        
+        .chat-message {
+            margin: 12px 0;
+            padding: 12px 16px;
+            border-radius: 16px;
+            max-width: 80%;
+        }
+        
+        .chat-user {
+            background: #10b981;
+            color: white;
+            margin-left: auto;
+            border-bottom-right-radius: 4px;
+        }
+        
+        .chat-bot {
+            background: #f3f4f6;
+            color: #374151;
+            border-bottom-left-radius: 4px;
+        }
+        
+        .camera-preview {
+            width: 100%;
+            height: 200px;
+            background: #f3f4f6;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px dashed #d1d5db;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .camera-preview:hover {
+            border-color: #10b981;
+            background: #f0fdf4;
+        }
+        
+        .alert-badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #ef4444;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <div class="phone-container">
+        <div class="phone-bezel">
+            <div class="notch"></div>
+        </div>
+        
+        <div class="status-bar">
+            <div class="flex items-center space-x-1">
+                <span>9:41</span>
+            </div>
+            <div class="flex items-center space-x-1">
+                <span>📶</span>
+                <span>📶</span>
+                <span>🔋</span>
+            </div>
+        </div>
+        
+        <div class="app-content">
+            <div id="onboarding" class="screen active">
+                <div class="gradient-bg h-full flex flex-col">
+                    <div class="flex-1 flex flex-col justify-center items-center text-white px-8">
+                        <div class="text-6xl mb-6">🌱</div>
+                        <h1 class="text-3xl font-bold text-center mb-4">Krishi Rakshak</h1>
+                        <p class="text-xl text-center mb-2">Easy & Smart Farming</p>
+                        <p class="text-center opacity-90 mb-12">Your AI-powered farming companion for better crops and higher yields</p>
+                        
+                        <div class="w-full space-y-4">
+                            <button onclick="startSetup()" class="w-full bg-white text-green-600 py-4 rounded-2xl font-semibold text-lg hover:bg-gray-50 transition-colors">
+                                Get Started 🚀
+                            </button>
+                            <p class="text-center text-sm opacity-75">Available in your local language</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="setup" class="screen">
+                <div class="p-6 pb-24">
+                    <div class="text-center mb-8">
+                        <h2 class="text-2xl font-bold text-gray-800 mb-2">Quick Setup</h2>
+                        <p class="text-gray-600">Help us personalize your farming experience</p>
+                        <div class="progress-bar mt-4">
+                            <div id="setupProgress" class="progress-fill" style="width: 20%"></div>
+                        </div>
+                    </div>
+
+                    <div id="setupStep1" class="setup-step">
+                        <div class="card">
+                            <div class="icon-circle bg-blue-100 text-blue-600">📍</div>
+                            <h3 class="text-lg font-semibold text-center mb-4">Enable Location</h3>
+                            <p class="text-gray-600 text-center mb-6">We need your location for accurate weather and soil data.</p>
+                            <button onclick="nextSetupStep()" class="w-full bg-green-600 text-white py-3 rounded-xl font-semibold hover:bg-green-700 transition-colors">
+                                Enable GPS 📡
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="setupStep2" class="setup-step hidden">
+                        <div class="card">
+                            <div class="icon-circle bg-green-100 text-green-600">🌾</div>
+                            <h3 class="text-lg font-semibold text-center mb-4">Farm Details</h3>
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Location</label>
+                                    <input type="text" value="Nagpur, Maharashtra" class="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Major Crop</label>
+                                    <select class="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                                        <option>Select your main crop</option>
+                                        <option>Wheat 🌾</option>
+                                        <option>Rice 🌾</option>
+                                        <option>Corn 🌽</option>
+                                        <option>Cotton 🌿</option>
+                                        <option>Sugarcane 🎋</option>
+                                    </select>
+                                </div>
+                                <button onclick="nextSetupStep()" class="w-full bg-green-600 text-white py-3 rounded-xl font-semibold hover:bg-green-700 transition-colors">
+                                    Continue ➡️
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="setupStep3" class="setup-step hidden">
+                        <div class="card">
+                            <div class="icon-circle bg-purple-100 text-purple-600">🗣️</div>
+                            <h3 class="text-lg font-semibold text-center mb-4">Language Preference</h3>
+                            <div class="grid grid-cols-2 gap-3 mb-6">
+                                <button class="p-3 border-2 border-green-500 bg-green-50 rounded-xl transition-colors">
+                                    English
+                                </button>
+                                <button class="p-3 border-2 border-gray-200 rounded-xl hover:border-green-500 hover:bg-green-50 transition-colors">
+                                    हिंदी
+                                </button>
+                                <button class="p-3 border-2 border-gray-200 rounded-xl hover:border-green-500 hover:bg-green-50 transition-colors">
+                                    मराठी
+                                </button>
+                                <button class="p-3 border-2 border-gray-200 rounded-xl hover:border-green-500 hover:bg-green-50 transition-colors">
+                                    ਪੰਜਾਬੀ
+                                </button>
+                            </div>
+                            <button onclick="completeSetup()" class="w-full bg-green-600 text-white py-3 rounded-xl font-semibold hover:bg-green-700 transition-colors">
+                                Complete Setup ✅
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="dashboard" class="screen">
+                <div class="gradient-bg p-6 pb-4">
+                    <div class="flex justify-between items-center mb-6">
+                        <div>
+                            <h1 class="text-2xl font-bold text-white">Good Afternoon! ☀️</h1>
+                            <p class="text-green-100">Rajesh Kumar</p>
+                        </div>
+                        <div class="relative">
+                            <button onclick="showScreen('alerts')" class="bg-white bg-opacity-20 p-3 rounded-full">
+                                <span class="text-white text-xl">🔔</span>
+                                <div class="alert-badge">3</div>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="px-6 pb-24 -mt-4">
+                    <div class="card">
+                        <div class="flex items-center justify-between mb-4">
+                            <div>
+                                <h3 class="text-lg font-semibold">Today's Weather</h3>
+                                <p class="text-xs text-gray-500">📍 Nagpur, Maharashtra</p>
+                            </div>
+                            <span class="text-3xl">🌤️</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <p class="text-2xl font-bold text-gray-800">31°C</p>
+                                <p class="text-gray-600">Partly Cloudy</p>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-sm text-gray-600">Humidity: 65%</p>
+                                <p class="text-sm text-gray-600">Rain: 10%</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3 class="text-lg font-semibold mb-4">Soil Health 🌱</h3>
+                        <div class="space-y-3">
+                            <div class="flex justify-between items-center">
+                                <span class="text-gray-600">Moisture</span>
+                                <div class="flex items-center">
+                                    <div class="w-20 h-2 bg-gray-200 rounded-full mr-2"><div class="w-16 h-2 bg-blue-500 rounded-full"></div></div>
+                                    <span class="text-sm font-medium">Good</span>
+                                </div>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-gray-600">Fertility (N-P-K)</span>
+                                <div class="flex items-center">
+                                    <div class="w-20 h-2 bg-gray-200 rounded-full mr-2"><div class="w-12 h-2 bg-yellow-500 rounded-full"></div></div>
+                                    <span class="text-sm font-medium">Medium</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3 class="text-lg font-semibold mb-4">Quick Actions</h3>
+                        <div class="grid grid-cols-2 gap-4">
+                            <button onclick="showScreen('crophealth')" class="flex flex-col items-center p-4 bg-green-50 rounded-xl hover:bg-green-100 transition-colors">
+                                <span class="text-2xl mb-2">📸</span>
+                                <span class="text-sm font-medium">Scan Crop</span>
+                            </button>
+                            <button onclick="showScreen('chatbot')" class="flex flex-col items-center p-4 bg-blue-50 rounded-xl hover:bg-blue-100 transition-colors">
+                                <span class="text-2xl mb-2">🤖</span>
+                                <span class="text-sm font-medium">Ask AI</span>
+                            </button>
+                            <button onclick="showScreen('market')" class="flex flex-col items-center p-4 bg-yellow-50 rounded-xl hover:bg-yellow-100 transition-colors">
+                                <span class="text-2xl mb-2">📈</span>
+                                <span class="text-sm font-medium">Market Prices</span>
+                            </button>
+                            <button onclick="showScreen('community')" class="flex flex-col items-center p-4 bg-pink-50 rounded-xl hover:bg-pink-100 transition-colors">
+                                <span class="text-2xl mb-2">👥</span>
+                                <span class="text-sm font-medium">Community</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="crophealth" class="screen">
+                <div class="p-6 pb-24">
+                    <div class="flex items-center mb-6">
+                        <button onclick="showScreen('dashboard')" class="mr-4 p-2 hover:bg-gray-100 rounded-full"><span class="text-xl">←</span></button>
+                        <h2 class="text-2xl font-bold text-gray-800">Crop Health Check</h2>
+                    </div>
+
+                    <div class="card">
+                        <h3 class="text-lg font-semibold mb-4">1. Select Crop Type</h3>
+                        <div class="grid grid-cols-3 gap-3">
+                            <button class="crop-select p-3 border-2 border-gray-200 rounded-xl hover:border-green-500 hover:bg-green-50 transition-colors" data-crop="Wheat"><div class="text-2xl mb-1">🌾</div><div class="text-sm">Wheat</div></button>
+                            <button class="crop-select p-3 border-2 border-gray-200 rounded-xl hover:border-green-500 hover:bg-green-50 transition-colors" data-crop="Rice"><div class="text-2xl mb-1">🌾</div><div class="text-sm">Rice</div></button>
+                            <button class="crop-select p-3 border-2 border-gray-200 rounded-xl hover:border-green-500 hover:bg-green-50 transition-colors" data-crop="Corn"><div class="text-2xl mb-1">🌽</div><div class="text-sm">Corn</div></button>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3 class="text-lg font-semibold mb-4">2. Capture Crop Photo</h3>
+                        <div id="cameraPreview" class="camera-preview mb-4" onclick="capturePhoto()">
+                            <div class="text-center">
+                                <span class="text-4xl mb-2 block">📷</span>
+                                <p class="text-gray-600">Tap to open camera</p>
+                            </div>
+                        </div>
+                        <button id="analyzeBtn" onclick="analyzePhoto()" class="w-full bg-green-600 text-white py-3 rounded-xl font-semibold hover:bg-green-700 transition-colors opacity-50 cursor-not-allowed" disabled>
+                            Analyze Crop Health 🔍
+                        </button>
+                    </div>
+
+                    <div id="analysisResult" class="card hidden">
+                        <h3 class="text-lg font-semibold mb-4">Analysis Results</h3>
+                        <div id="healthStatus" class="mb-4"></div>
+                        <div id="recommendations" class="space-y-3"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="alerts" class="screen">
+                <div class="p-6 pb-24">
+                    <div class="flex items-center mb-6">
+                        <button onclick="showScreen('dashboard')" class="mr-4 p-2 hover:bg-gray-100 rounded-full"><span class="text-xl">←</span></button>
+                        <h2 class="text-2xl font-bold text-gray-800">Alerts & Notifications</h2>
+                    </div>
+
+                    <div class="space-y-4">
+                        <div class="card border-l-4 border-red-500"><div class="flex items-start"><span class="text-2xl mr-3">🐛</span><div class="flex-1"><h4 class="font-semibold text-red-700">Pest Alert</h4><p class="text-gray-600 text-sm mt-1">High risk of aphid infestation in your area. Check wheat crops immediately.</p><p class="text-xs text-gray-500 mt-2">2 hours ago</p></div></div></div>
+                        <div class="card border-l-4 border-yellow-500"><div class="flex items-start"><span class="text-2xl mr-3">💧</span><div class="flex-1"><h4 class="font-semibold text-yellow-700">Irrigation Reminder</h4><p class="text-gray-600 text-sm mt-1">Soil moisture is getting low. Consider watering your crops soon.</p><p class="text-xs text-gray-500 mt-2">6 hours ago</p></div></div></div>
+                        <div class="card border-l-4 border-blue-500"><div class="flex items-start"><span class="text-2xl mr-3">🌧️</span><div class="flex-1"><h4 class="font-semibold text-blue-700">Weather Update</h4><p class="text-gray-600 text-sm mt-1">Light rain expected tomorrow. Good time for fertilizer application.</p><p class="text-xs text-gray-500 mt-2">1 day ago</p></div></div></div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="chatbot" class="screen">
+                <div class="p-6 pb-24">
+                    <div class="flex items-center mb-6">
+                        <button onclick="showScreen('dashboard')" class="mr-4 p-2 hover:bg-gray-100 rounded-full"><span class="text-xl">←</span></button>
+                        <div>
+                            <h2 class="text-2xl font-bold text-gray-800">AI Assistant</h2>
+                            <p class="text-sm text-gray-600">Ask me anything about farming</p>
+                        </div>
+                    </div>
+
+                    <div id="chatMessages" class="space-y-4 mb-6" style="height: 350px; overflow-y: auto;">
+                        <div class="chat-message chat-bot"><p>Hello! I am your farming assistant. How can I help you today? 🌱</p></div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3 mb-4">
+                        <button onclick="askQuestion('What fertilizer for wheat?')" class="p-3 bg-green-50 rounded-xl text-sm hover:bg-green-100">🌾 Wheat fertilizer?</button>
+                        <button onclick="askQuestion('How to control pests?')" class="p-3 bg-blue-50 rounded-xl text-sm hover:bg-blue-100">🐛 Pest control?</button>
+                    </div>
+
+                    <div class="flex space-x-2">
+                        <input id="chatInput" type="text" placeholder="Type your question..." class="flex-1 p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                        <button onclick="sendMessage()" class="bg-green-600 text-white p-3 rounded-xl hover:bg-green-700">📤</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="market" class="screen">
+                <div class="p-6 pb-24">
+                    <div class="flex items-center mb-6">
+                        <button onclick="showScreen('dashboard')" class="mr-4 p-2 hover:bg-gray-100 rounded-full"><span class="text-xl">←</span></button>
+                        <h2 class="text-2xl font-bold text-gray-800">Market Prices</h2>
+                    </div>
+                    <div class="card">
+                        <h3 class="text-lg font-semibold mb-4">Today's Prices (Nagpur Mandi)</h3>
+                        <div class="space-y-3">
+                            <div class="flex justify-between items-center p-3 bg-green-50 rounded-xl"><div class="flex items-center"><span class="text-2xl mr-3">🌾</span><div><p class="font-medium">Wheat</p><p class="text-xs text-gray-500">Per Quintal</p></div></div><div class="text-right"><p class="text-lg font-bold text-green-600">₹2,450</p><p class="text-xs text-green-600">↗ +2.1%</p></div></div>
+                            <div class="flex justify-between items-center p-3 bg-blue-50 rounded-xl"><div class="flex items-center"><span class="text-2xl mr-3">🌾</span><div><p class="font-medium">Rice</p><p class="text-xs text-gray-500">Per Quintal</p></div></div><div class="text-right"><p class="text-lg font-bold text-blue-600">₹3,200</p><p class="text-xs text-red-600">↘ -0.8%</p></div></div>
+                            <div class="flex justify-between items-center p-3 bg-yellow-50 rounded-xl"><div class="flex items-center"><span class="text-2xl mr-3">🌽</span><div><p class="font-medium">Corn</p><p class="text-xs text-gray-500">Per Quintal</p></div></div><div class="text-right"><p class="text-lg font-bold text-yellow-600">₹1,850</p><p class="text-xs text-green-600">↗ +4.2%</p></div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="community" class="screen">
+                 <div class="p-6 pb-24">
+                    <div class="flex items-center mb-6">
+                        <button onclick="showScreen('dashboard')" class="mr-4 p-2 hover:bg-gray-100 rounded-full"><span class="text-xl">←</span></button>
+                        <h2 class="text-2xl font-bold text-gray-800">Community Forum</h2>
+                    </div>
+                    <div class="card">
+                        <h3 class="text-lg font-semibold mb-4">Recent Posts</h3>
+                        <div class="space-y-4">
+                            <div class="border-l-4 border-green-500 pl-4"><div class="flex items-center mb-2"><div class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center mr-3"><span class="text-sm">👨‍🌾</span></div><div><p class="font-medium text-sm">Ramesh P.</p><p class="text-xs text-gray-500">2 hours ago</p></div></div><p class="text-sm text-gray-700">Great wheat harvest! App recommendation for organic fertilizer worked wonders.</p><div class="flex items-center mt-2 space-x-4"><button class="text-xs text-green-600">👍 24</button><button class="text-xs text-blue-600">💬 8</button></div></div>
+                            <div class="border-l-4 border-blue-500 pl-4"><div class="flex items-center mb-2"><div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center mr-3"><span class="text-sm">👩‍🌾</span></div><div><p class="font-medium text-sm">Sunita S.</p><p class="text-xs text-gray-500">4 hours ago</p></div></div><p class="text-sm text-gray-700">Anyone facing aphid problems in cotton near Katol? Need advice.</p><div class="flex items-center mt-2 space-x-4"><button class="text-xs text-green-600">👍 12</button><button class="text-xs text-blue-600">💬 15</button></div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bottom-nav">
+                <div class="nav-item active" onclick="showScreen('dashboard')"><span class="text-xl">🏠</span><span class="text-xs mt-1">Home</span></div>
+                <div class="nav-item" onclick="showScreen('crophealth')"><span class="text-xl">📸</span><span class="text-xs mt-1">Scan</span></div>
+                <div class="nav-item" onclick="showScreen('chatbot')"><span class="text-xl">🤖</span><span class="text-xs mt-1">AI Chat</span></div>
+                <div class="nav-item" onclick="showScreen('market')"><span class="text-xl">📈</span><span class="text-xs mt-1">Market</span></div>
+                <div class="nav-item" onclick="showScreen('community')"><span class="text-xl">👥</span><span class="text-xs mt-1">Community</span></div>
+            </div>
+        </div> 
+        
+        <div class="home-indicator"></div>
+    </div>
+
+    <script>
+        let currentScreen = 'onboarding';
+        let setupStep = 1;
+        let selectedCrop = '';
+        let photoTaken = false;
+
+        function showScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(screen => screen.classList.remove('active'));
+            document.getElementById(screenId).classList.add('active');
+            currentScreen = screenId;
+            
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+            const screenMap = {'dashboard': 0, 'crophealth': 1, 'chatbot': 2, 'market': 3, 'community': 4};
+            if (screenMap[screenId] !== undefined) {
+                document.querySelectorAll('.nav-item')[screenMap[screenId]].classList.add('active');
+            }
+        }
+
+        function startSetup() {
+            showScreen('setup');
+        }
+
+        function nextSetupStep() {
+            const currentStep = document.getElementById(`setupStep${setupStep}`);
+            currentStep.classList.add('hidden');
+            setupStep++;
+            const nextStep = document.getElementById(`setupStep${setupStep}`);
+            if (nextStep) {
+                nextStep.classList.remove('hidden');
+                document.getElementById('setupProgress').style.width = (setupStep / 3) * 100 + '%';
+            }
+        }
+
+        function completeSetup() {
+            setTimeout(() => showScreen('dashboard'), 500);
+        }
+
+        document.querySelectorAll('.crop-select').forEach(button => {
+            button.addEventListener('click', function() {
+                document.querySelectorAll('.crop-select').forEach(btn => btn.classList.remove('border-green-500', 'bg-green-50'));
+                this.classList.add('border-green-500', 'bg-green-50');
+                selectedCrop = this.dataset.crop;
+                if (photoTaken) enableAnalysis();
+            });
+        });
+
+        function capturePhoto() {
+            const preview = document.getElementById('cameraPreview');
+            preview.innerHTML = `<div class="text-center"><span class="text-4xl mb-2 block">✅</span><p class="text-green-600 font-medium">Photo captured!</p></div>`;
+            preview.classList.add('bg-green-50', 'border-green-300');
+            photoTaken = true;
+            if (selectedCrop) enableAnalysis();
+        }
+
+        function enableAnalysis() {
+            const analyzeBtn = document.getElementById('analyzeBtn');
+            analyzeBtn.disabled = false;
+            analyzeBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+        }
+
+        function analyzePhoto() {
+            const analyzeBtn = document.getElementById('analyzeBtn');
+            analyzeBtn.innerHTML = 'Analyzing... 🔍';
+            analyzeBtn.disabled = true;
+            setTimeout(() => {
+                showAnalysisResults();
+                analyzeBtn.innerHTML = 'Analyze Crop Health 🔍';
+                analyzeBtn.disabled = false;
+            }, 2000);
+        }
+
+        function showAnalysisResults() {
+            const resultDiv = document.getElementById('analysisResult');
+            const healthStatus = document.getElementById('healthStatus');
+            const recommendations = document.getElementById('recommendations');
+            const isHealthy = Math.random() > 0.4;
+            
+            let statusHTML = '';
+            let recommendationsHTML = '';
+
+            if (isHealthy) {
+                statusHTML = `<div class="flex items-center p-4 bg-green-50 rounded-xl"><span class="text-2xl mr-3">✅</span><div><h4 class="font-semibold text-green-700">Healthy Crop</h4><p class="text-sm text-green-600">Your ${selectedCrop} looks healthy!</p></div></div>`;
+                recommendationsHTML = `<div class="p-3 bg-blue-50 rounded-xl"><h5 class="font-medium text-blue-700 mb-2">💡 Recommendations:</h5><ul class="text-sm text-blue-600 space-y-1"><li>Continue regular watering.</li><li>Monitor for any changes.</li></ul></div>`;
+            } else {
+                statusHTML = `<div class="flex items-center p-4 bg-red-50 rounded-xl"><span class="text-2xl mr-3">⚠️</span><div><h4 class="font-semibold text-red-700">Issue Detected</h4><p class="text-sm text-red-600">Possible Nitrogen deficiency.</p></div></div>`;
+                recommendationsHTML = `<div class="p-3 bg-yellow-50 rounded-xl"><h5 class="font-medium text-yellow-700 mb-2">🚨 Immediate Actions:</h5><ul class="text-sm text-yellow-600 space-y-1"><li>Apply a nitrogen-rich fertilizer.</li><li>Ensure proper soil pH.</li></ul></div>`;
+            }
+            
+            healthStatus.innerHTML = statusHTML;
+            recommendations.innerHTML = recommendationsHTML;
+            resultDiv.classList.remove('hidden');
+        }
+
+        function askQuestion(question) {
+            document.getElementById('chatInput').value = question;
+            sendMessage();
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+            if (message === '') return;
+            
+            const chatMessages = document.getElementById('chatMessages');
+            const userMessage = document.createElement('div');
+            userMessage.className = 'chat-message chat-user';
+            userMessage.innerHTML = `<p>${message}</p>`;
+            chatMessages.appendChild(userMessage);
+            
+            input.value = '';
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+
+            setTimeout(() => {
+                const botResponse = document.createElement('div');
+                botResponse.className = 'chat-message chat-bot';
+                botResponse.innerHTML = `<p>For wheat, a balanced NPK fertilizer like 12-32-16 is recommended during sowing. I am analyzing more details for you... 🌱</p>`;
+                chatMessages.appendChild(botResponse);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }, 1500);
+        }
+    </script>
+</body>
+</html>
